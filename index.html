@@ -14,7 +14,24 @@
     <button type="submit">Merken</button>
   </form>
   <script>
-    // TODO: fetch()-Aufruf zum Cloudflare-Worker
+    document.getElementById('watchlist-form').addEventListener('submit', async function (e) {
+      e.preventDefault(); // Verhindert, dass das Formular die Seite neu lädt
+
+      // Daten aus den Eingabefeldern holen
+      const title = e.target.title.value;
+      const platform = e.target.platform.value;
+      const email = e.target.email.value;
+
+      // fetch()-Aufruf zum Cloudflare-Worker
+      const res = await fetch('https://watchlist-worker.nicolas-kraettli.workers.dev/api/watchlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, title, platform })
+      });
+
+      const responseText = await res.text();
+      alert(responseText); // Zeigt die Antwort des Workers als Benachrichtigung an
+    });
   </script>
 </body>
 </html>
